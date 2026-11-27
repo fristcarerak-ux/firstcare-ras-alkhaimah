@@ -72,6 +72,7 @@ footer{background:#102849;color:#dce6f5;padding:28px 0;text-align:center}footer 
 </main>
 <footer><div class="wrap"><img src="firstcare-logo.png" alt=""><strong>فرست كير لخدمات العمالة المساعدة – رأس الخيمة</strong><p>للاستفسار والتواصل: +971 50 651 8772</p><a class="wa" href="https://wa.me/971506518772" target="_blank" rel="noopener">ابدأ محادثة واتساب</a></div></footer>
 <a class="float-wa" href="https://wa.me/971506518772" target="_blank" rel="noopener">◉ واتساب فرست كير</a>
+<script src="firstcare-cloud.js"></script>
 <script src="videos.js"></script>
 <script>
 const data = Array.isArray(window.FIRSTCARE_VIDEOS) ? window.FIRSTCARE_VIDEOS : [];
@@ -114,8 +115,8 @@ natGrid.addEventListener('click', event => {
  if (chip) chip.click();
 });
 search.addEventListener('input',render);render();
-fetch('/api/videos').then(r=>{if(!r.ok)throw Error();return r.json()}).then(items=>{
+publishedVideos().then(items=>{
  data.unshift(...items);render();
-}).catch(()=>{});
+}).catch(()=>{if(!data.length)grid.textContent='تعذر تحميل الفيديوهات الآن. يرجى تحديث الصفحة.'});
 </script>
 </body></html>

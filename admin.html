@@ -24,52 +24,64 @@ input,select,textarea{width:100%;border:1px solid #d0d5dd;border-radius:9px;padd
 <main class="wrap">
  <section class="panel">
   <h2>إضافة فيديو جديد</h2>
-  <p class="hint">اختر فيديو من جهازك. الحد الأقصى ١٠٠ ميجابايت. صيغة MP4 أنسب للمشاهدة على أجهزة مختلفة.</p>
+  <p class="hint">اختر فيديو من جهازك. الحد الأقصى ٥٠ ميجابايت. صيغة MP4 أنسب للمشاهدة على أجهزة مختلفة.</p>
   <form id="videoForm">
    <div class="field"><label for="title">اسم الفيديو *</label><input id="title" maxlength="120" required placeholder="مثال: عاملة منزلية 01"></div>
    <div class="field"><label for="nationality">الجنسية *</label><select id="nationality" required><option value="">اختر الجنسية</option><option>الفلبين</option><option>إندونيسيا</option><option>سيرلانكا</option><option>الهند</option><option>ميانمار</option><option>كينيا</option><option>تنزانيا</option><option>مدغشقر</option></select></div>
    <div class="field"><label for="file">اختار فيديو من الجهاز</label><input type="file" id="file" required accept=".mp4,.m4v,.mov,.webm,video/mp4,video/quicktime,video/webm"></div>
-   <div class="field"><label for="password">كلمة مرور الإدارة</label><input type="password" id="password" autocomplete="current-password" required></div>
+   <div class="field"><label for="email">بريد مدير الفيديوهات</label><input type="email" id="email" autocomplete="username" required></div><div class="field"><label for="password">كلمة مرور الإدارة</label><input type="password" id="password" autocomplete="current-password" required></div>
    <div class="field full"><label for="description">وصف مختصر (اختياري)</label><input id="description" maxlength="1500" placeholder="معلومات إضافية عن الفيديو"></div>
   </form>
   <button class="btn blue" form="videoForm" id="publish">رفع ونشر الفيديو</button>
   <p role="status" id="status"></p>
  </section><section class="panel"><h2>الفيديوهات المرفوعة من الجهاز</h2><div id="list"></div></section></main>
+<script src="firstcare-cloud.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.js"></script>
 <script>
 const $=id=>document.getElementById(id);
-const auth=()=>({Authorization:'Bearer '+$('password').value});
+const client=window.supabase.createClient(firstcareUrl,firstcarePublicKey,{auth:{persistSession:false,detectSessionInUrl:false}});
+async function authenticate(){
+ const {data,error}=await client.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});
+ if(error)throw Error('تعذر تسجيل الدخول. راجع البريد وكلمة المرور.');
+ if(data.user.app_metadata.firstcare_admin!==true)throw Error('هذا الحساب لا يملك صلاحية إدارة الفيديوهات.');
+}
 async function refresh(){
- const response=await fetch('/api/videos');
- if(!response.ok)throw Error();
- const items=await response.json();
+ const items=await publishedVideos();
  $('list').replaceChildren();
  if(!items.length)$('list').textContent='لم تُرفع فيديوهات بعد.';
  for(const item of items){
-  const row=document.createElement('div'),label=document.createElement('strong'),remove=document.createElement('button');
-  row.className='item';label.textContent=item.title+' · '+item.nationality;remove.className='btn red';remove.textContent='حذف';
-  remove.onclick=async()=>{
-   if(!$('password').value){$('password').reportValidity();return}
-   if(!confirm('حذف هذا الفيديو من الموقع؟'))return;
-   try{const r=await fetch('/api/videos/'+item.id,{method:'DELETE',headers:auth()});if(!r.ok)throw Error(await r.text());await refresh()}
-   catch(e){$('status').textContent=e.message||'تعذر الحذف.'}
+  const row=document.createElement('div'),label=document.createElement('strong'),button=document.createElement('button');
+  row.className='item';label.textContent=item.title+' · '+item.nationality;button.className='btn red';button.textContent='حذف';
+  button.onclick=async()=>{
+   if(!$('email').reportValidity()||!$('password').reportValidity()||!confirm('حذف هذا الفيديو المنشور؟'))return;
+   button.disabled=true;
+   try{
+    await authenticate();
+    const {error}=await client.storage.from(bucketName).remove([item.path]);
+    if(error)throw Error('تعذر حذف الفيديو.');
+    await refresh();$('status').textContent='تم حذف الفيديو.';
+   }catch(e){$('status').textContent=e.message}finally{button.disabled=false}
   };
-  row.append(label,remove);$('list').append(row);
+  row.append(label,button);$('list').append(row);
  }
 }
 $('videoForm').onsubmit=async event=>{
  event.preventDefault();
  const file=$('file').files[0];
- let ext='.'+file.name.split('.').pop().toLowerCase();
- if(ext==='.m4v')ext='.mp4';
- if(!['.mp4','.mov','.webm'].includes(ext)||file.size>100*1024*1024){$('status').textContent='اختر ملف MP4 أو MOV أو WebM بحد أقصى ١٠٠ ميجابايت.';return}
- const query=new URLSearchParams({ext,title:$('title').value,nationality:$('nationality').value,description:$('description').value});
- $('publish').disabled=true;$('status').textContent='جارٍ رفع الفيديو، اترك الصفحة مفتوحة…';
+ const extension=file.name.split('.').pop().toLowerCase();
+ const mime={mp4:'video/mp4',m4v:'video/mp4',mov:'video/quicktime',webm:'video/webm'}[extension];
+ if(!mime||!file.size||file.size>50000000){$('status').textContent='اختر فيديو MP4 أو MOV أو WebM بحجم أقصاه ٥٠ ميجابايت.';return}
+ $('publish').disabled=true;$('status').textContent='جارٍ التحقق من الحساب ورفع الفيديو…';
  try{
-  const r=await fetch('/api/videos?'+query,{method:'POST',headers:auth(),body:file});
-  if(r.status!==201)throw Error(r.status===401?'كلمة مرور الإدارة غير صحيحة.':'تعذر الرفع. تحقق من الملف وإعداد خدمة الرفع.');
-  $('file').value='';$('title').value='';$('description').value='';$('status').textContent='تم نشر الفيديو على الموقع.';
+  await authenticate();
+  const metadata={title:$('title').value.trim(),nationality:$('nationality').value,description:$('description').value.trim()};
+  if(!metadata.title)throw Error('اكتب اسم الفيديو.');
+  const path=crypto.randomUUID()+'.'+extension;
+  const {error}=await client.storage.from(bucketName).upload(path,file,{metadata,contentType:mime,upsert:false});
+  if(error)throw Error('تعذر رفع الفيديو. راجع الاتصال ومساحة التخزين وصلاحيات الحساب.');
+  $('file').value='';$('title').value='';$('description').value='';$('status').textContent='تم نشر الفيديو.';
   await refresh().catch(()=>{});
  }catch(e){$('status').textContent=e.message}finally{$('publish').disabled=false}
 };
-refresh().catch(()=>{$('status').textContent='خدمة الرفع غير متصلة. يلزم تشغيلها على حساب الشركة.'});
+refresh().catch(()=>{$('list').textContent='تعذر تحميل القائمة. تأكد من إعداد التخزين.'});
 </script></body></html>
