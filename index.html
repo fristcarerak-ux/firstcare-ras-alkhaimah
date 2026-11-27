@@ -120,4 +120,36 @@ publishedVideos().then(items=>{
  data.unshift(...items);render();
 }).catch(()=>{if(!data.length)grid.textContent='تعذر تحميل الفيديوهات الآن. يرجى تحديث الصفحة.'});
 </script>
-</body></html>
+<style>
+  a.center-map-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4em;
+    box-sizing: border-box;
+    width: min(100%, 640px);
+    padding: 14px 12px;
+    border: 3px solid #173765;
+    border-radius: 16px;
+    background: white;
+    color: #173765;
+    font-size: clamp(22px, 4vw, 36px);
+    font-weight: 800;
+    line-height: 1.4;
+    text-align: center;
+  }
+  a.center-map-link:hover,
+  a.center-map-link:focus-visible {
+    background: #173765;
+    color: white;
+  }
+</style>
+<script>
+  const locationLink = document.querySelector('a[href*="maps.app.goo.gl"]');
+  const viewingSteps = document.getElementById('how');
+
+  if (locationLink) {
+    locationLink.classList.add('center-map-link');
+    if (viewingSteps) locationLink.parentElement.after(viewingSteps);
+  }
+</script></body></html>
