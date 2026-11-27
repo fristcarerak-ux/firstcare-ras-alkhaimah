@@ -32,12 +32,12 @@ footer{background:#102849;color:#dce6f5;padding:28px 0;text-align:center}footer 
 .float-wa{position:fixed;bottom:18px;left:18px;z-index:8;background:#15965b;color:#fff;border-radius:50px;padding:13px 18px;box-shadow:0 8px 25px #0003;font-weight:bold}
 @media(max-width:800px){.hero-grid{grid-template-columns:1fr}.hero-logo{display:none}.grid{grid-template-columns:repeat(2,1fr)}.navlinks a:not(.wa){display:none}}
 @media(max-width:560px){.grid{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.hero{padding:38px 0}.nav{min-height:70px}.brand img{width:54px;height:54px}.brand{font-size:15px}}
-</style>
+#videos,#how,#nationalities{scroll-margin-top:8rem}summary{cursor:pointer;color:#173765;font-weight:bold;padding-block:.75rem}details p{margin-top:0;white-space:pre-line}.card-actions{margin-top:.5rem}#nationalities{margin-top:2rem!important}</style>
 </head>
 <body>
 <header><div class="wrap nav">
  <a class="brand" href="#"><img src="firstcare-logo.png" alt="شعار فرست كير" style="width:72px;height:72px"><span>فرست كير – رأس الخيمة<small>خدمات العمالة المساعدة</small></span></a>
- <nav class="navlinks"><a href="#nationalities">الجنسيات والأسعار</a><a href="#videos">الفيديوهات</a><a class="wa" style="background:#173765" href="admin.html">إدارة الفيديوهات</a><a href="#how">طريقة المشاهدة</a><a class="wa" href="https://wa.me/971506518772" target="_blank" rel="noopener">واتساب المكتب</a></nav>
+ <nav class="navlinks"><a href="#nationalities">الجنسيات والأسعار</a><a href="#videos">الفيديوهات</a><a href="#how">طريقة المشاهدة</a><a class="wa" href="https://wa.me/971506518772" target="_blank" rel="noopener">واتساب المكتب</a></nav>
 </div></header>
 <section class="hero"><div class="wrap hero-grid">
  <div><div class="eyebrow">FIRST CARE · RAS AL KHAIMAH</div><h1>اختار وشاهد الفيديو<br>وتواصل معنا بسهولة</h1>
@@ -54,15 +54,16 @@ footer{background:#102849;color:#dce6f5;padding:28px 0;text-align:center}footer 
 <main class="wrap" id="videos">
  <div class="intro"><h2>فيديوهات العاملات</h2><p>اختر الجنسية أو ابحث بالاسم لمشاهدة الفيديوهات المتاحة</p></div>
  
+
+
+ <div class="toolbar"><input id="search" class="search" type="search" placeholder="ابحث عن فيديو أو جنسية..." aria-label="بحث">
+ <div id="filters" class="filters"><button class="chip active" data-filter="الكل">الكل</button></div></div>
+ <div id="videoGrid" class="grid"><div class="empty"><strong>الفيديوهات قيد الإضافة</strong>يمكنك الاستفسار عن المتاحات عبر واتساب المكتب.</div></div>
  <section class="how" id="nationalities" style="margin:0 0 28px">
   <h2>الجنسيات والأسعار</h2>
   <p style="color:#667085;margin-top:-8px">الأسعار بالدرهم الإماراتي · الراتب الشهري حسب الخبرة حيث ينطبق</p>
   <div id="nationalityGrid" class="grid"></div>
  </section>
-
- <div class="toolbar"><input id="search" class="search" type="search" placeholder="ابحث عن فيديو أو جنسية..." aria-label="بحث">
- <div id="filters" class="filters"><button class="chip active" data-filter="الكل">الكل</button></div></div>
- <div id="videoGrid" class="grid"><div class="empty"><strong>الفيديوهات قيد الإضافة</strong>سيتم عرض فيديوهات العاملات هنا بعد إضافة روابط الفيديوهات إلى ملف videos.js.</div></div>
  <section class="how" id="how"><h2>كيف تشاهد الفيديو؟</h2><div class="steps">
   <div class="step"><b>١. اختر الجنسية</b><span>استخدم أزرار التصنيف للوصول إلى الفيديوهات المناسبة.</span></div>
   <div class="step"><b>٢. شاهد الفيديو</b><span>اضغط تشغيل لمشاهدة الفيديو وتعرّف على التفاصيل المتاحة.</span></div>
@@ -75,17 +76,17 @@ footer{background:#102849;color:#dce6f5;padding:28px 0;text-align:center}footer 
 <script>
 const data = Array.isArray(window.FIRSTCARE_VIDEOS) ? window.FIRSTCARE_VIDEOS : [];
 const nationalities = [
- {name:"الفلبين",flag:"flags/ph.svg",price:"12,600",salary:"1,600–1,700"},
- {name:"إندونيسيا",flag:"flags/id.svg",price:"15,700",salary:"1,200–1,300"},
- {name:"سيرلانكا",flag:"flags/lk.svg",price:"15,700",salary:"1,300"},
- {name:"الهند",flag:"flags/in.svg",price:"12,600",salary:"1,200"},
- {name:"ميانمار",flag:"flags/mm.svg",price:"13,600",salary:"1,100"},
- {name:"كينيا",flag:"flags/ke.svg",price:"5,500",salary:"1,000–1,200"},
- {name:"تنزانيا",flag:"flags/tz.svg",price:"5,250",salary:"1,200"},
- {name:"مدغشقر",flag:"flags/mg.svg",price:"5,250",salary:"1,000"}
+ {name:"الفلبين",flag:"ph.svg",price:"12,600",salary:"1,600–1,700"},
+ {name:"إندونيسيا",flag:"id.svg",price:"15,700",salary:"1,200–1,300"},
+ {name:"سيرلانكا",flag:"lk.svg",price:"15,700",salary:"1,300"},
+ {name:"الهند",flag:"in.svg",price:"12,600",salary:"1,200"},
+ {name:"ميانمار",flag:"mm.svg",price:"13,600",salary:"1,100"},
+ {name:"كينيا",flag:"ke.svg",price:"5,500",salary:"1,000–1,200"},
+ {name:"تنزانيا",flag:"tz.svg",price:"5,250",salary:"1,200"},
+ {name:"مدغشقر",flag:"mg.svg",price:"5,250",salary:"1,000"}
 ];
 const natGrid=document.getElementById('nationalityGrid');
-if(natGrid) natGrid.innerHTML=nationalities.map(n=>'<article class="card"><div class="card-body"><div style="height:52px;display:flex;align-items:center;margin-bottom:8px"><img src="'+n.flag+'" alt="علم '+n.name+'" style="width:76px;height:50px;object-fit:cover;border:1px solid #e4e9f1;border-radius:7px;box-shadow:0 2px 6px #15294b18"></div><h3>'+n.name+'</h3><div class="meta">سعر الاستقدام</div><div style="font-size:24px;font-weight:800;color:#173765">'+n.price+' <small style="font-size:12px">درهم</small></div><div style="border-top:1px solid #e4e9f1;margin:12px 0;padding-top:10px"><span class="meta">الراتب الشهري</span><div style="font-size:19px;font-weight:700">'+n.salary+' <small style="font-size:12px">درهم</small></div></div><a class="btn btn-green" style="width:100%" href="https://wa.me/971506518772?text='+encodeURIComponent('مرحباً فرست كير، أريد الاستفسار عن الاستقدام من '+n.name)+'" target="_blank" rel="noopener">استفسر عبر واتساب</a></div></article>').join('');
+if(natGrid) natGrid.innerHTML=nationalities.map(n=>'<article class="card"><div class="card-body"><div style="height:52px;display:flex;align-items:center;margin-bottom:8px"><img src="'+n.flag+'" alt="علم '+n.name+'" style="width:76px;height:50px;object-fit:cover;border:1px solid #e4e9f1;border-radius:7px;box-shadow:0 2px 6px #15294b18"></div><h3>'+n.name+'</h3><div class="meta">سعر الاستقدام</div><div style="font-size:24px;font-weight:800;color:#173765">'+n.price+' <small style="font-size:12px">درهم</small></div><div style="border-top:1px solid #e4e9f1;margin:12px 0;padding-top:10px"><span class="meta">الراتب الشهري</span><div style="font-size:19px;font-weight:700">'+n.salary+' <small style="font-size:12px">درهم</small></div></div><a class="btn btn-blue" style="width:100%;margin-bottom:8px" href="#videos" data-nation="'+n.name+'">مشاهدة فيديوهات '+n.name+'</a><a class="btn btn-green" style="width:100%" href="https://wa.me/971506518772?text='+encodeURIComponent('مرحباً فرست كير، أريد الاستفسار عن الاستقدام من '+n.name)+'" target="_blank" rel="noopener">استفسر عبر واتساب</a></div></article>').join('');
 const grid=document.getElementById('videoGrid'), filters=document.getElementById('filters'), search=document.getElementById('search');
 let active='الكل';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -93,18 +94,25 @@ function waLink(item){const msg=encodeURIComponent('مرحباً فرست كير
 function render(){
  const q=search.value.trim().toLowerCase();
  const items=data.filter(v=>(active==='الكل'||v.nationality===active)&&[v.title,v.nationality,v.description].join(' ').toLowerCase().includes(q));
- if(!items.length){grid.innerHTML='<div class="empty"><strong>'+(data.length?'لا توجد نتائج مطابقة':'الفيديوهات قيد الإضافة')+'</strong>'+(data.length?'جرّب البحث بكلمات أخرى أو اختر تصنيفاً مختلفاً.':'أضف روابط الفيديوهات في ملف videos.js لتظهر هنا.')+'</div>';return}
+ if(!items.length){grid.innerHTML='<div class="empty"><strong>'+(data.length?'لا توجد نتائج مطابقة':'الفيديوهات قيد الإضافة')+'</strong>'+(data.length?'جرّب البحث بكلمات أخرى أو اختر تصنيفاً مختلفاً.':'يمكنك الاستفسار عن المتاحات عبر واتساب المكتب.')+'</div>';return}
  grid.innerHTML=items.map(v=>{
  let media='';
  if(v.type==='youtube'&&v.url){const id=(v.url.match(/(?:youtu\.be\/|v=|embed\/)([A-Za-z0-9_-]{6,})/)||[])[1];media=id?'<iframe src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id)+'" title="'+esc(v.title)+'" allowfullscreen loading="lazy"></iframe>':'<a class="play-placeholder" href="'+esc(v.url)+'" target="_blank">▶</a>'}
  else if(v.url&&(/\.(mp4|webm|ogg)(\?|$)/i.test(v.url)||v.type==='mp4'))media='<video controls playsinline preload="metadata" src="'+esc(v.url)+'"></video>';
  else media='<a class="play-placeholder" href="'+esc(v.url||'#')+'" target="_blank" aria-label="فتح الفيديو">▶</a>';
- return '<article class="card"><div class="player">'+media+'</div><div class="card-body"><h3>'+esc(v.title)+'</h3><div class="meta">'+esc(v.nationality||'فيديو')+(v.description?' · '+esc(v.description):'')+'</div><div class="card-actions"><a class="btn btn-blue" href="'+esc(v.url||'#')+'" target="_blank" rel="noopener">فتح الفيديو ↗</a><a class="btn btn-green" href="'+waLink(v)+'" target="_blank" rel="noopener">إرسال واتساب</a></div></div></article>'
+ return '<article class="card"><div class="player">'+media+'</div><div class="card-body"><h3>'+esc(v.title)+'</h3><div class="meta">'+esc(v.nationality||'فيديو')+'</div><details><summary>معلومات عن العاملة</summary><p>'+esc(v.description||'للمزيد من المعلومات، تواصل مع المكتب.')+'</p></details><div class="card-actions"><a class="btn btn-green" href="'+waLink(v)+'" target="_blank" rel="noopener">إرسال الفيديو لواتساب المكتب</a></div></div></article>'
  }).join('');
 }
-const nations=[...new Set(data.map(v=>v.nationality).filter(Boolean))];
+const nations=[...new Set([...nationalities.map(n=>n.name), ...data.map(v=>v.nationality).filter(Boolean)])];
 nations.forEach(n=>{const b=document.createElement('button');b.className='chip';b.dataset.filter=n;b.textContent=n;filters.appendChild(b)});
 filters.addEventListener('click',e=>{const b=e.target.closest('button[data-filter]');if(!b)return;active=b.dataset.filter;filters.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x===b));render()});
+natGrid.addEventListener('click', event => {
+ const link = event.target.closest('[data-nation]');
+ if (!link) return;
+ search.value = '';
+ const chip = Array.from(filters.querySelectorAll('button')).find(button => button.dataset.filter === link.dataset.nation);
+ if (chip) chip.click();
+});
 search.addEventListener('input',render);render();
 </script>
 </body></html>
