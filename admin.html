@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#173765">
+<title>إدارة الفيديوهات | فرست كير رأس الخيمة</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f7fb;color:#172235;font-family:Tahoma,Arial,sans-serif;line-height:1.7}
+.wrap{width:min(920px,calc(100% - 28px));margin:28px auto}
+header{background:#173765;color:#fff;padding:22px 0}.head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{font-size:25px;margin:0}header p{margin:4px 0 0;color:#dce6f5;font-size:13px}
+a{color:inherit;text-decoration:none}.btn{border:0;border-radius:10px;padding:11px 16px;font:inherit;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.white{background:#fff;color:#173765}.blue{background:#173765;color:#fff}.green{background:#e7f6ed;color:#087b50}.red{background:#fff0ef;color:#b42318}.gray{background:#eef2f7;color:#344054}
+.panel{background:#fff;border:1px solid #e4e9f1;border-radius:16px;padding:20px;margin:18px 0;box-shadow:0 4px 18px #15294b08}
+h2{font-size:20px;color:#173765;margin:0 0 12px}.hint{font-size:13px;color:#667085;margin:0 0 16px}
+form{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}label{font-size:14px;font-weight:700}
+input,select,textarea{width:100%;border:1px solid #d0d5dd;border-radius:9px;padding:11px;font:inherit;background:#fff;min-width:0}input:focus,select:focus{outline:2px solid #b9c9e3;border-color:#244c83}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #eef0f4}.item:last-child{border:0}.item strong{display:block;color:#173765}.item small{color:#667085;overflow-wrap:anywhere}.empty{color:#667085;text-align:center;padding:18px}
+.notice{background:#fff8e6;border:1px solid #f4d58b;color:#7a4b00;border-radius:12px;padding:13px;font-size:13px}
+@media(max-width:600px){form{grid-template-columns:1fr}.field.full{grid-column:auto}.item{align-items:flex-start}.item .btn{padding:8px;font-size:12px}}
+</style></head>
+<body>
+<header><div class="wrap head" style="margin-top:0;margin-bottom:0"><div><h1>إدارة فيديوهات فرست كير</h1><p>إضافة وحذف الفيديوهات وتجهيز ملف التحديث للموقع</p></div><a class="btn white" href="index.html">العودة للموقع</a></div></header>
+<main class="wrap">
+ <div class="notice"><b>ملاحظة مهمة:</b> هذه لوحة إدارة للنسخة الثابتة من الموقع. التغييرات تُحفظ مؤقتاً في هذا المتصفح، ثم تضغط «تنزيل ملف الفيديوهات» وترفع الملف videos.js الجديد إلى استضافة الموقع حتى تظهر التحديثات لجميع الزوار. هذه الصفحة ليست لوحة دخول آمنة ولا تنشر التغييرات مباشرة.</div>
+ <section class="panel">
+  <h2>إضافة فيديو جديد</h2>
+  <p class="hint">أدخل رابط فيديو مباشر MP4 أو رابط YouTube. استخدم روابط تملك حق نشرها.</p>
+  <form id="videoForm">
+   <div class="field"><label for="title">اسم الفيديو *</label><input id="title" required placeholder="مثال: عاملة منزلية 01"></div>
+   <div class="field"><label for="nationality">الجنسية *</label><select id="nationality" required><option value="">اختر الجنسية</option><option>الفلبين</option><option>إندونيسيا</option><option>سيرلانكا</option><option>الهند</option><option>ميانمار</option><option>كينيا</option><option>تنزانيا</option><option>مدغشقر</option></select></div>
+   <div class="field"><label for="type">نوع الفيديو *</label><select id="type"><option value="mp4">رابط فيديو MP4 مباشر</option><option value="youtube">YouTube</option></select></div>
+   <div class="field"><label for="url">رابط الفيديو *</label><input id="url" type="url" required placeholder="https://..."></div>
+   <div class="field full"><label for="description">وصف مختصر (اختياري)</label><input id="description" placeholder="معلومات إضافية عن الفيديو"></div>
+  </form>
+  <div class="actions"><button class="btn blue" type="submit" form="videoForm">＋ إضافة الفيديو</button><button class="btn gray" id="clearForm" type="button">مسح الحقول</button></div>
+ </section>
+ <section class="panel">
+  <h2>الفيديوهات المضافة (<span id="count">0</span>)</h2>
+  <div id="list"><div class="empty">لم تتم إضافة فيديوهات بعد.</div></div>
+  <div class="actions"><button class="btn green" id="download">تنزيل ملف videos.js</button><button class="btn gray" id="reset">إعادة تحميل القائمة الأصلية</button></div>
+ </section>
+ <section class="panel">
+  <h2>طريقة نشر التعديلات</h2>
+  <ol style="padding-right:22px;margin-bottom:0">
+   <li>أضف أو احذف الفيديوهات من هذه الصفحة.</li>
+   <li>اضغط «تنزيل ملف videos.js».</li>
+   <li>استبدل ملف videos.js القديم في ملفات موقعك بالملف الجديد.</li>
+   <li>ارفع التحديث إلى الاستضافة، ثم افتح الموقع للتأكد من ظهور الفيديوهات.</li>
+  </ol>
+ </section>
+</main>
+<script src="videos.js"></script>
+<script>
+const original=Array.isArray(window.FIRSTCARE_VIDEOS)?window.FIRSTCARE_VIDEOS:[];
+let entries=JSON.parse(JSON.stringify(original));
+const $=id=>document.getElementById(id);
+const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function draw(){
+ $('count').textContent=entries.length;
+ $('list').innerHTML=entries.length?entries.map((v,i)=>`<div class="item"><div><strong>${escapeHTML(v.title)} · ${escapeHTML(v.nationality)}</strong><small>${escapeHTML(v.type)} — ${escapeHTML(v.url)}</small></div><button class="btn red" data-remove="${i}" type="button">حذف</button></div>`).join(''):'<div class="empty">لم تتم إضافة فيديوهات بعد.</div>';
+}
+$('videoForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const v={title:$('title').value.trim(),nationality:$('nationality').value,type:$('type').value,url:$('url').value.trim(),description:$('description').value.trim()};
+ if(!v.title||!v.nationality||!v.url)return;
+ if(v.type==='youtube'&&!/(youtube\.com|youtu\.be)/i.test(v.url)){alert('أدخل رابط YouTube صحيحاً.');return}
+ if(v.type==='mp4'&&!/^https?:\/\//i.test(v.url)){alert('أدخل رابط فيديو يبدأ بـ https:// أو http://');return}
+ entries.push(v);draw();e.target.reset();
+});
+$('list').addEventListener('click',e=>{const b=e.target.closest('[data-remove]');if(!b)return;entries.splice(Number(b.dataset.remove),1);draw()});
+$('clearForm').onclick=()=>$('videoForm').reset();
+$('reset').onclick=()=>{if(confirm('هل تريد تجاهل تعديلات هذه الجلسة وإعادة القائمة الأصلية؟')){entries=JSON.parse(JSON.stringify(original));draw()}};
+$('download').onclick=()=>{
+ const content='/* تم إنشاؤه من لوحة إدارة فيديوهات فرست كير */\nwindow.FIRSTCARE_VIDEOS = '+JSON.stringify(entries,null,2)+';\n';
+ const blob=new Blob([content],{type:'text/javascript;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='videos.js';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+};
+draw();
+</script>
+</body></html>
