@@ -1,0 +1,1 @@
+{"name":"firstcare-video-office","private":true,"engines":{"node":"24.x"},"scripts":{"start":"node server.mjs"}}

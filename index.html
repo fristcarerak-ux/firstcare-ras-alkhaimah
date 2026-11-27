@@ -90,7 +90,7 @@ if(natGrid) natGrid.innerHTML=nationalities.map(n=>'<article class="card"><div c
 const grid=document.getElementById('videoGrid'), filters=document.getElementById('filters'), search=document.getElementById('search');
 let active='الكل';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function waLink(item){const msg=encodeURIComponent('مرحباً فرست كير، أريد الاستفسار عن الفيديو: '+item.title+(item.nationality?' - '+item.nationality:'')+(item.url?' '+item.url:''));return 'https://wa.me/971506518772?text='+msg}
+function waLink(item){const msg=encodeURIComponent('مرحباً فرست كير، أريد الاستفسار عن الفيديو: '+item.title+(item.nationality?' - '+item.nationality:'')+(item.url?' '+new URL(item.url,location.href).href:''));return 'https://wa.me/971506518772?text='+msg}
 function render(){
  const q=search.value.trim().toLowerCase();
  const items=data.filter(v=>(active==='الكل'||v.nationality===active)&&[v.title,v.nationality,v.description].join(' ').toLowerCase().includes(q));
@@ -114,5 +114,8 @@ natGrid.addEventListener('click', event => {
  if (chip) chip.click();
 });
 search.addEventListener('input',render);render();
+fetch('/api/videos').then(r=>{if(!r.ok)throw Error();return r.json()}).then(items=>{
+ data.unshift(...items);render();
+}).catch(()=>{});
 </script>
 </body></html>
